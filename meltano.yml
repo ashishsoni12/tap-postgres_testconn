@@ -1,0 +1,35 @@
+version: 1
+send_anonymous_usage_stats: true
+project_id: "tap-postgres"
+default_environment: test
+environments:
+- name: test
+plugins:
+  extractors:
+  - name: "tap-postgres_testconn"
+    namespace: "tap_postgres_testconn"
+    pip_url: -e .
+    capabilities:
+    - state
+    - catalog
+    - discover
+    - about
+    - stream-maps
+    config:
+      host: "ec2-3-0-184-69.ap-southeast-1.compute.amazonaws.com"
+      port: 30003
+      database: "wmebservices"
+      user: "watermelon"
+      password: "watermelon123"
+  loaders:
+  - name: target-jsonl
+    variant: andyh1203
+    pip_url: target-jsonl
+  - name: kafka-loader
+    namespace: kafka_loader
+    pip_url: -e ./loader-kafka
+    executable: loader-kafka
+    config:
+      kafka_brokers: ec2-54-82-37-97.compute-1.amazonaws.com:9092
+      topic_prefix: 23seppostgres
+
